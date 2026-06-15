@@ -2,7 +2,7 @@
 
 An interactive star map of the published research of **Joseph A. Cafazzo** — 141 publications spanning 1996–2026, charted as a constellation from his Google Scholar profile.
 
-**Live page:** https://USERNAME.github.io/publication-starmap/ *(updates once GitHub Pages is enabled)*
+**Live page:** https://jcafazzo.github.io/publication-starmap/
 
 ## What it is
 
