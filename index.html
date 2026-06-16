@@ -29,12 +29,9 @@
     font-family:"Iowan Old Style","Palatino Linotype",Georgia,serif;
     font-weight:600;font-size:clamp(30px,3.9vw,54px);line-height:1.1;letter-spacing:.4px;
     will-change:transform;backface-visibility:hidden}
-  .hn-main{color:#f6faff;background:linear-gradient(92deg,#ffffff 0%,#cfe6ff 52%,#8ec5ff 100%);
-    -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
-    text-shadow:0 1px 0 rgba(255,255,255,.04)}
-  .hn-cyan{color:#3fe3ff;opacity:.55;mix-blend-mode:screen}
-  .hn-rose{color:#ff4f9d;opacity:.5;mix-blend-mode:screen}
-  .hn-glow{color:#2fb6ff;opacity:.5;filter:blur(16px)}
+  .hn-main{color:#f3f8ff;background:linear-gradient(96deg,#ffffff 0%,#d7e9ff 55%,#a8cdff 100%);
+    -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .hn-glow{color:#5aa6ff;opacity:.34;filter:blur(15px)}
   #title .sub{margin-top:7px;font-family:"Helvetica Neue",Arial,sans-serif;font-size:13px;
     color:#9fb4d6;letter-spacing:.02em}
   #title .sub b{color:#eaf1ff;font-weight:600}
@@ -205,8 +202,6 @@
     <h1>The Constellation<br>of a Career</h1>
     <div id="heroName">
       <span class="hn-layer hn-glow hn-name" aria-hidden="true">Joseph A. Cafazzo</span>
-      <span class="hn-layer hn-cyan hn-name" aria-hidden="true">Joseph A. Cafazzo</span>
-      <span class="hn-layer hn-rose hn-name" aria-hidden="true">Joseph A. Cafazzo</span>
       <span class="hn-layer hn-main hn-name" id="authorName">Joseph A. Cafazzo</span>
     </div>
     <div class="sub"><span id="pubcount">172</span> publications &nbsp;·&nbsp; <span id="yrange">1995 – 2026</span> &nbsp;·&nbsp; <span id="srclabel">charted from Google Scholar</span></div>
@@ -492,16 +487,35 @@ function computePositions(){
     const li=themeOrder[d.th];
     const base=laneY(li);
     const k=d.th+'|'+d.y, arr=bucket[k], pos=arr.indexOf(d), cnt=arr.length;
-    const jitterRange=laneStep*0.62;
+    const jitterRange=laneStep*0.86;   // taller spread → each lane reads as a 2-D constellation
     // spread members of same bucket across lane height deterministically
     let off;
-    if(cnt===1){ off=(hash(d.i)-0.5)*jitterRange*0.7; }
-    else { off=((pos+0.5)/cnt-0.5)*jitterRange + (hash(d.i)-0.5)*6; }
-    d.sx=xOf(d.y) + (hash(d.i*3.3)-0.5)*7;
+    if(cnt===1){ off=(hash(d.i)-0.5)*jitterRange*0.92; }
+    else { off=((pos+0.5)/cnt-0.5)*jitterRange + (hash(d.i)-0.5)*10; }
+    d.sx=xOf(d.y) + (hash(d.i*3.3)-0.5)*16;   // a little organic x-jitter
     d.sy=base+off;
     d.baseR=SIZE*(2.8 + 0.52*Math.sqrt(d.c||0));
     d.phase=hash(d.i*9.1)*Math.PI*2;
     d.tw=0.6+hash(d.i*5.7)*0.9;
+  });
+  buildConstellationEdges();
+}
+// connect each star to its 1–2 nearest neighbours WITHIN its research area, forming a
+// distinct organic figure per constellation (instead of one flat chronological line)
+let themeEdges=[];
+function buildConstellationEdges(){
+  themeEdges=[]; const seen=new Set();
+  THEMES.forEach(t=>{
+    const pts=DATA.filter(d=>d.th===t.name);
+    for(const a of pts){
+      const nb=pts.filter(b=>b!==a).map(b=>({b,d:(b.sx-a.sx)**2+(b.sy-a.sy)**2})).sort((x,y)=>x.d-y.d);
+      for(let kk=0;kk<Math.min(2,nb.length);kk++){
+        if(kk===1 && nb[1].d>nb[0].d*2.6) break;          // only add a 2nd link when it's close
+        const key=Math.min(a.i,nb[kk].b.i)+'-'+Math.max(a.i,nb[kk].b.i);
+        if(seen.has(key)) continue; seen.add(key);
+        themeEdges.push({a, b:nb[kk].b, th:t.name});
+      }
+    }
   });
 }
 
@@ -573,29 +587,24 @@ function draw(now){
   }
   ctx.globalAlpha=1;
 
-  // lane baselines + labels
+  // research-area labels — no full-width rule, so each area reads as its own constellation
   ctx.textBaseline='middle';
   THEMES.forEach((t,li)=>{
     const y=laneY(li); const dim = activeTheme && activeTheme!==t.name;
-    ctx.strokeStyle=`rgba(${themeRGB[t.name].join(',')},${dim?0.05:0.12})`;
-    ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(margin.l,y); ctx.lineTo(W-margin.r,y); ctx.stroke();
-    ctx.font='10px Helvetica Neue,Arial,sans-serif';
-    ctx.textAlign='left';
-    ctx.fillStyle=`rgba(${themeRGB[t.name].join(',')},${dim?0.25:0.78})`;
-    ctx.fillText(t.name.toUpperCase(), margin.l, y-laneStepHalf()-2);
+    ctx.font='10px Helvetica Neue,Arial,sans-serif'; ctx.textAlign='left';
+    ctx.fillStyle=`rgba(${themeRGB[t.name].join(',')},${dim?0.22:0.66})`;
+    ctx.fillText(t.name.toUpperCase(), margin.l, y-laneStepHalf()+3);
   });
 
-  // constellation connecting lines (per theme, chronological), revealed progressively
-  THEMES.forEach(t=>{
-    const pts=DATA.filter(d=>d.th===t.name && d.y<=progress).sort((a,b)=>a.y-b.y||a.sx-b.sx);
-    if(pts.length<2) return;
-    const dim = activeTheme && activeTheme!==t.name;
-    ctx.strokeStyle=`rgba(${themeRGB[t.name].join(',')},${dim?0.04:0.22})`;
-    ctx.lineWidth=dim?0.5:1; ctx.beginPath();
-    ctx.moveTo(pts[0].sx,pts[0].sy);
-    for(let i=1;i<pts.length;i++) ctx.lineTo(pts[i].sx,pts[i].sy);
-    ctx.stroke();
-  });
+  // constellation figures: organic nearest-neighbour star-lines, unique per research area
+  for(const e of themeEdges){
+    if(e.a.y>progress || e.b.y>progress) continue;
+    const dim = activeTheme && activeTheme!==e.th;
+    const rgb=themeRGB[e.th];
+    ctx.strokeStyle=`rgba(${rgb.join(',')},${dim?0.05:0.28})`;
+    ctx.lineWidth=dim?0.5:1;
+    ctx.beginPath(); ctx.moveTo(e.a.sx,e.a.sy); ctx.lineTo(e.b.sx,e.b.sy); ctx.stroke();
+  }
 
   // stars
   for(const d of DATA){
@@ -781,8 +790,7 @@ document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeSwitcher(); }
 (function(){
   const hero=document.getElementById('heroName');
   if(!hero) return;
-  const gl=hero.querySelector('.hn-glow'), cy_=hero.querySelector('.hn-cyan'),
-        ro=hero.querySelector('.hn-rose'), mn=hero.querySelector('.hn-main');
+  const gl=hero.querySelector('.hn-glow'), mn=hero.querySelector('.hn-main');
   let tx=0,ty=0,cx=0,cy=0,t=0;
   window.addEventListener('mousemove',e=>{
     tx=(e.clientX/window.innerWidth-0.5)*2;
@@ -790,15 +798,10 @@ document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeSwitcher(); }
   });
   function tick(){
     t+=0.016;
-    cx+=(tx-cx)*0.09; cy+=(ty-cy)*0.09;              // snappy spring follow
-    const br=Math.sin(t*0.85)*2.4;                   // perpetual drift so it lives at rest
-    const mx=cx*8, my=cy*6;
-    const split=6 + Math.abs(cx)*16 + Math.abs(br)*0.4;   // chromatic split grows with cursor
-    hero.style.transform=`rotateY(${cx*17}deg) rotateX(${-cy*13}deg)`;     // wild 3D tilt
-    gl.style.transform=`translate3d(${cx*48+br}px,${cy*36}px,0)`;          // deep glow parallax
-    mn.style.transform=`translate3d(${mx}px,${my}px,0)`;
-    cy_.style.transform=`translate3d(${mx-split}px,${my-cy*3}px,0)`;       // cyan fringe
-    ro.style.transform=`translate3d(${mx+split}px,${my+cy*3}px,0)`;        // rose fringe
+    cx+=(tx-cx)*0.05; cy+=(ty-cy)*0.05;              // soft spring follow
+    const fl=Math.sin(t*0.6)*2.4;                    // gentle perpetual float
+    mn.style.transform=`translate3d(${cx*5}px,${cy*3}px,0)`;            // subtle name drift
+    gl.style.transform=`translate3d(${cx*11+fl}px,${cy*7+fl*0.4}px,0)`; // glow trails behind for soft depth
     requestAnimationFrame(tick);
   }
   tick();
