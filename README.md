@@ -1,6 +1,6 @@
 # The Constellation of a Career
 
-An interactive star map of the published research of **Joseph A. Cafazzo** — 141 publications spanning 1996–2026, charted as a constellation from his Google Scholar profile.
+An interactive star map of the published research of **Joseph A. Cafazzo** — 172 publications spanning 1995–2026, charted as a constellation from his Google Scholar profile. (Desktop only.)
 
 **Live page:** https://jcafazzo.github.io/publication-starmap/
 
@@ -16,7 +16,7 @@ Every publication is a star. The stars are grouped into seven research "constell
 - Kidney & Dialysis
 - Methods & Other
 
-On load, a **career timelapse** sweeps left to right, igniting each paper in the year it was published while a counter ticks up to 141.
+On load, a **career timelapse** sweeps left to right, igniting each paper in the year it was published while a counter ticks up to 172. The researcher's name is featured with a mouse-driven parallax effect.
 
 ## Visual encoding
 
@@ -35,12 +35,7 @@ On load, a **career timelapse** sweeps left to right, igniting each paper in the
 
 The page can build a constellation for **any** Google Scholar author, not just the default. Click **"✦ Chart another researcher"** under the title. The dataset is swapped in place — the timeline, lanes, legend counts, citation-scaled stars, and author rings all recompute for the new profile.
 
-Because Google Scholar has no public API and blocks cross-origin requests, there are two ways in:
-
-- **Paste the profile (works for anyone).** Open the target Scholar profile, click *Show more* until all papers are loaded, select all, copy, and paste into the box. The page parses each entry's title, citation count, year, and authors; classifies it into one of the seven constellations by title; infers the researcher's name; and rings their first/senior-author work.
-- **By URL or ID (best-effort).** Paste a `scholar.google.com/citations?user=…` link or the bare ID and press *Load*. It attempts a live fetch through public CORS proxies — but Google usually blocks automated access, in which case it falls back to asking you to paste.
-
-A **"Reset to Cafazzo"** button restores the default.
+Google Scholar has no public API and blocks automated loading (every CORS proxy is served a robot page), so the profile is **pasted in**: open the target Scholar profile, click *Show more* until all papers are loaded, select all, copy, and paste into the box. The page parses each entry's title, citation count, year, and authors; classifies it into one of the seven constellations by title; infers the researcher's name; and rings their first/senior-author work. A **"Reset to Cafazzo"** button restores the default.
 
 ## Data
 
