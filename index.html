@@ -23,8 +23,8 @@
   #title h1{margin:0;font-size:clamp(24px,3.4vw,46px);font-weight:600;line-height:1.02;
     letter-spacing:.5px;text-shadow:0 0 30px rgba(70,150,255,.35)}
   /* ---- Featured scholar name with mouse parallax ---- */
-  #heroName{position:relative;margin:14px 0 4px;height:1.12em;perspective:680px;
-    transform-style:preserve-3d;will-change:transform}
+  #heroName{position:relative;margin:16px 0 8px;font-size:clamp(30px,3.9vw,54px);height:1.18em;
+    perspective:680px;transform-style:preserve-3d;will-change:transform}
   .hn-layer{position:absolute;left:0;top:0;white-space:nowrap;
     font-family:"Iowan Old Style","Palatino Linotype",Georgia,serif;
     font-weight:600;font-size:clamp(30px,3.9vw,54px);line-height:1.1;letter-spacing:.4px;
@@ -32,8 +32,9 @@
   .hn-main{color:#f6faff;background:linear-gradient(92deg,#ffffff 0%,#cfe6ff 52%,#8ec5ff 100%);
     -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
     text-shadow:0 1px 0 rgba(255,255,255,.04)}
-  .hn-echo{color:#5fa8ff;opacity:.30;filter:blur(.4px)}
-  .hn-glow{color:#39b9ff;opacity:.42;filter:blur(13px)}
+  .hn-cyan{color:#3fe3ff;opacity:.55;mix-blend-mode:screen}
+  .hn-rose{color:#ff4f9d;opacity:.5;mix-blend-mode:screen}
+  .hn-glow{color:#2fb6ff;opacity:.5;filter:blur(16px)}
   #title .sub{margin-top:7px;font-family:"Helvetica Neue",Arial,sans-serif;font-size:13px;
     color:#9fb4d6;letter-spacing:.02em}
   #title .sub b{color:#eaf1ff;font-weight:600}
@@ -203,7 +204,8 @@
     <h1>The Constellation<br>of a Career</h1>
     <div id="heroName">
       <span class="hn-layer hn-glow hn-name" aria-hidden="true">Joseph A. Cafazzo</span>
-      <span class="hn-layer hn-echo hn-name" aria-hidden="true">Joseph A. Cafazzo</span>
+      <span class="hn-layer hn-cyan hn-name" aria-hidden="true">Joseph A. Cafazzo</span>
+      <span class="hn-layer hn-rose hn-name" aria-hidden="true">Joseph A. Cafazzo</span>
       <span class="hn-layer hn-main hn-name" id="authorName">Joseph A. Cafazzo</span>
     </div>
     <div class="sub"><span id="pubcount">172</span> publications &nbsp;·&nbsp; <span id="yrange">1995 – 2026</span> &nbsp;·&nbsp; <span id="srclabel">charted from Google Scholar</span></div>
@@ -770,7 +772,8 @@ document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeSwitcher(); }
 (function(){
   const hero=document.getElementById('heroName');
   if(!hero) return;
-  const gl=hero.querySelector('.hn-glow'), ec=hero.querySelector('.hn-echo'), mn=hero.querySelector('.hn-main');
+  const gl=hero.querySelector('.hn-glow'), cy_=hero.querySelector('.hn-cyan'),
+        ro=hero.querySelector('.hn-rose'), mn=hero.querySelector('.hn-main');
   let tx=0,ty=0,cx=0,cy=0,t=0;
   window.addEventListener('mousemove',e=>{
     tx=(e.clientX/window.innerWidth-0.5)*2;
@@ -778,12 +781,15 @@ document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeSwitcher(); }
   });
   function tick(){
     t+=0.016;
-    cx+=(tx-cx)*0.075; cy+=(ty-cy)*0.075;            // spring-smoothed follow
-    const breathe=Math.sin(t*0.9)*1.6;               // subtle perpetual drift
-    hero.style.transform=`rotateY(${cx*10}deg) rotateX(${-cy*7.5}deg)`;
-    gl.style.transform=`translate3d(${cx*32+breathe}px,${cy*24}px,0)`;
-    ec.style.transform=`translate3d(${cx*19+breathe*0.5}px,${cy*14}px,0)`;
-    mn.style.transform=`translate3d(${cx*7}px,${cy*5}px,0)`;
+    cx+=(tx-cx)*0.09; cy+=(ty-cy)*0.09;              // snappy spring follow
+    const br=Math.sin(t*0.85)*2.4;                   // perpetual drift so it lives at rest
+    const mx=cx*8, my=cy*6;
+    const split=6 + Math.abs(cx)*16 + Math.abs(br)*0.4;   // chromatic split grows with cursor
+    hero.style.transform=`rotateY(${cx*17}deg) rotateX(${-cy*13}deg)`;     // wild 3D tilt
+    gl.style.transform=`translate3d(${cx*48+br}px,${cy*36}px,0)`;          // deep glow parallax
+    mn.style.transform=`translate3d(${mx}px,${my}px,0)`;
+    cy_.style.transform=`translate3d(${mx-split}px,${my-cy*3}px,0)`;       // cyan fringe
+    ro.style.transform=`translate3d(${mx+split}px,${my+cy*3}px,0)`;        // rose fringe
     requestAnimationFrame(tick);
   }
   tick();
