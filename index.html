@@ -64,12 +64,13 @@
     border:1.6px solid #d6e2f6;vertical-align:middle;box-shadow:0 0 4px rgba(170,200,240,.5)}
 
   /* ---- Counter / stats (top-mid-left under title) ---- */
-  #readout{position:absolute;left:30px;bottom:118px;z-index:6;pointer-events:none;
+  #readout{position:absolute;left:30px;top:52px;z-index:6;pointer-events:none;
     font-family:"Helvetica Neue",Arial,sans-serif}
-  #readout .big{font-size:62px;font-weight:200;letter-spacing:1px;line-height:.9;color:#eaf1ff;
-    font-variant-numeric:tabular-nums;text-shadow:0 0 26px rgba(80,170,255,.4)}
-  #readout .big small{font-size:20px;color:#7f96bb;font-weight:300}
-  #readout .yr{font-size:13px;letter-spacing:.32em;color:#6fd4ff;margin-top:6px;text-transform:uppercase}
+  #readout .big{font-size:46px;font-weight:200;letter-spacing:1px;line-height:.92;color:#eaf1ff;
+    font-variant-numeric:tabular-nums;text-shadow:0 0 22px rgba(80,170,255,.38)}
+  #readout #cnt{display:inline-block;min-width:2.1ch;text-align:right}
+  #readout .big small{font-size:16px;color:#7f96bb;font-weight:300}
+  #readout .yr{font-size:12px;letter-spacing:.32em;color:#6fd4ff;margin-top:5px;text-transform:uppercase}
 
   /* ---- Controls / timeline ---- */
   #controls{position:absolute;left:0;right:0;bottom:0;height:106px;z-index:6;
@@ -444,10 +445,18 @@ function layout(){
   cv.width=W*DPR; cv.height=H*DPR; ctx.setTransform(DPR,0,0,DPR,0,0);
   // full-width plot (so the timeline lines up with the slider); drop the plot BELOW the
   // legend instead of squeezing it, so the constellation is never compressed.
-  margin.l=80; margin.r=60; margin.b=120;
+  margin.l=80; margin.r=60; margin.b=118;
   const legEl=document.getElementById('legend');
+  const titleEl=document.getElementById('title');
   const legB = legEl ? legEl.getBoundingClientRect().bottom : 60;
-  margin.t = Math.max(H<640?150:185, Math.round(legB)+22);
+  const titleR = titleEl ? titleEl.getBoundingClientRect() : {bottom:200,right:560};
+  // drop the plot below BOTH the header block and the legend so nothing overlaps the lane labels
+  margin.t = Math.max(185, Math.round(legB)+24, Math.round(titleR.bottom)+30);
+  // featured counter floats in the empty band between the header and the legend
+  const ro=document.getElementById('readout');
+  const nameEl=document.querySelector('.hn-main');
+  const chromeRight=Math.max(titleR.right, nameEl?nameEl.getBoundingClientRect().right:0);
+  if(ro){ ro.style.left=Math.round(chromeRight+56)+'px'; ro.style.top='60px'; ro.style.bottom='auto'; }
   // make the timeline track span exactly the plot area [margin.l, W-margin.r]
   const trackEl=document.getElementById('track');
   if(trackEl){ trackEl.style.left=margin.l+'px'; trackEl.style.right=margin.r+'px'; }
