@@ -11,47 +11,44 @@
   }
   *{box-sizing:border-box}
   html,body{margin:0;height:100%;background:#05070f;color:#eaf1ff;
-    font-family:"Iowan Old Style","Palatino Linotype",Georgia,"Times New Roman",serif;
-    overflow:hidden;-webkit-font-smoothing:antialiased}
+    font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue","Segoe UI",Roboto,sans-serif;
+    overflow:hidden;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
   #stage{position:fixed;inset:0}
   canvas{display:block;position:absolute;inset:0;width:100%;height:100%}
+  /* soft deference scrim so the de-boxed chrome stays legible over the starfield */
+  #topscrim{position:absolute;left:0;right:0;top:0;height:200px;z-index:5;pointer-events:none;
+    background:linear-gradient(to bottom,rgba(5,7,15,.82),rgba(5,7,15,.34) 46%,transparent)}
 
-  /* ---- Header ---- */
-  #title{position:absolute;left:28px;top:22px;z-index:6;pointer-events:none;max-width:62vw}
-  #title .eyebrow{font-family:"Helvetica Neue",Arial,sans-serif;font-size:11px;letter-spacing:.42em;
-    text-transform:uppercase;color:#6fd4ff;opacity:.9;margin-bottom:8px}
-  #title h1{margin:0;font-size:clamp(24px,3.4vw,46px);font-weight:600;line-height:1.02;
-    letter-spacing:.5px;text-shadow:0 0 30px rgba(70,150,255,.35)}
-  /* ---- Featured scholar name with mouse parallax ---- */
-  #heroName{position:relative;margin:16px 0 8px;font-size:clamp(30px,3.9vw,54px);height:1.18em;
-    perspective:680px;transform-style:preserve-3d;will-change:transform}
+  /* ---- Header (Apple sensibility: thin type, deep margins, zero ornament) ---- */
+  #title{position:absolute;left:40px;top:36px;z-index:6;pointer-events:none;max-width:58vw}
+  #title .eyebrow{font-size:10.5px;letter-spacing:.4em;text-transform:uppercase;
+    color:#7a8fb4;font-weight:500;margin-bottom:20px}
+  /* ---- Featured scholar name — the hero — with a whisper of mouse parallax ---- */
+  #heroName{position:relative;margin:0 0 18px;font-size:clamp(34px,4.6vw,62px);height:1.14em;
+    perspective:760px;will-change:transform}
   .hn-layer{position:absolute;left:0;top:0;white-space:nowrap;
-    font-family:"Iowan Old Style","Palatino Linotype",Georgia,serif;
-    font-weight:600;font-size:clamp(30px,3.9vw,54px);line-height:1.1;letter-spacing:.4px;
+    font-weight:200;font-size:clamp(34px,4.6vw,62px);line-height:1.12;letter-spacing:-.018em;
     will-change:transform;backface-visibility:hidden}
-  .hn-main{color:#f3f8ff;background:linear-gradient(96deg,#ffffff 0%,#d7e9ff 55%,#a8cdff 100%);
-    -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
-  .hn-glow{color:#5aa6ff;opacity:.34;filter:blur(15px)}
-  #title .sub{margin-top:7px;font-family:"Helvetica Neue",Arial,sans-serif;font-size:13px;
-    color:#9fb4d6;letter-spacing:.02em}
-  #title .sub b{color:#eaf1ff;font-weight:600}
+  .hn-main{color:#f4f8ff}
+  .hn-glow{color:rgba(196,214,240,.13);filter:blur(22px)}
+  #title .sub{margin-top:0;font-size:12px;color:#8095b9;letter-spacing:.04em;font-weight:400}
+  #title .sub b{color:#cdddf2;font-weight:600}
 
-  /* ---- Legend ---- */
-  #legend{position:absolute;right:24px;top:22px;z-index:6;display:flex;flex-direction:column;gap:4px;
-    background:var(--panel);border:1px solid var(--stroke);border-radius:14px;padding:11px 13px;
-    backdrop-filter:blur(9px);-webkit-backdrop-filter:blur(9px);min-width:208px}
-  #legend .lg-h{font-family:"Helvetica Neue",Arial,sans-serif;font-size:9.5px;letter-spacing:.28em;
-    text-transform:uppercase;color:#7f96bb;margin-bottom:2px}
-  .chip{display:flex;align-items:center;gap:9px;cursor:pointer;font-family:"Helvetica Neue",Arial,sans-serif;
-    font-size:12px;color:#d6e2f6;padding:2px 5px;border-radius:8px;transition:background .15s,opacity .15s;
-    user-select:none}
-  .chip:hover{background:rgba(255,255,255,.05)}
-  .chip .dot{width:11px;height:11px;border-radius:50%;flex:0 0 auto;box-shadow:0 0 9px currentColor}
-  .chip .ct{margin-left:auto;color:#6f86aa;font-size:11px;font-variant-numeric:tabular-nums}
-  .chip.off{opacity:.32}
-  .lg-note{margin-top:9px;padding-top:9px;border-top:1px solid var(--stroke);
-    font-family:"Helvetica Neue",Arial,sans-serif;font-size:10px;color:#7f96bb;
-    display:flex;align-items:center;gap:6px;letter-spacing:.01em}
+  /* ---- Legend (de-boxed: floats in the negative space, one hairline for the key) ---- */
+  #legend{position:absolute;right:40px;top:36px;z-index:6;display:flex;flex-direction:column;gap:1px;
+    min-width:186px}
+  #legend .lg-h{font-size:10px;letter-spacing:.34em;text-transform:uppercase;color:#7a8fb4;
+    font-weight:500;margin-bottom:13px}
+  .chip{display:flex;align-items:center;gap:11px;cursor:pointer;
+    font-size:12.5px;color:#c2d2ea;padding:4px 0;transition:color .15s,opacity .15s;
+    user-select:none;font-weight:400}
+  .chip:hover{color:#ffffff}
+  .chip .dot{width:9px;height:9px;border-radius:50%;flex:0 0 auto;box-shadow:0 0 7px currentColor}
+  .chip .ct{margin-left:auto;padding-left:20px;color:#6c83a8;font-size:11.5px;font-variant-numeric:tabular-nums}
+  .chip.off{opacity:.26}
+  .lg-note{margin-top:14px;padding-top:13px;border-top:1px solid rgba(120,150,200,.13);
+    font-size:9.5px;color:#6c83a8;
+    display:flex;flex-wrap:wrap;align-items:center;gap:5px 8px;letter-spacing:.02em;line-height:1.5}
   .lg-note .sz{display:inline-flex;align-items:center;gap:3px}
   .lg-note .sz i{display:inline-block;border-radius:50%;background:#9fb6d6;box-shadow:0 0 5px #9fb6d6}
   .lg-note .sz i:nth-child(1){width:3px;height:3px}
@@ -60,14 +57,13 @@
   .lg-note .ringkey{display:inline-block;width:9px;height:9px;border-radius:50%;
     border:1.6px solid #d6e2f6;vertical-align:middle;box-shadow:0 0 4px rgba(170,200,240,.5)}
 
-  /* ---- Counter / stats (top-mid-left under title) ---- */
-  #readout{position:absolute;left:30px;top:52px;z-index:6;pointer-events:none;
-    font-family:"Helvetica Neue",Arial,sans-serif}
-  #readout .big{font-size:46px;font-weight:200;letter-spacing:1px;line-height:.92;color:#eaf1ff;
-    font-variant-numeric:tabular-nums;text-shadow:0 0 22px rgba(80,170,255,.38)}
+  /* ---- Live counter: an ultra-thin numeral that ignites with the timelapse ---- */
+  #readout{position:absolute;left:30px;top:52px;z-index:6;pointer-events:none}
+  #readout .big{font-size:clamp(34px,3.5vw,48px);font-weight:100;letter-spacing:-.012em;line-height:.9;
+    color:#e7eefb;font-variant-numeric:tabular-nums}
   #readout #cnt{display:inline-block;min-width:2.1ch;text-align:right}
-  #readout .big small{font-size:16px;color:#7f96bb;font-weight:300}
-  #readout .yr{font-size:12px;letter-spacing:.32em;color:#6fd4ff;margin-top:5px;text-transform:uppercase}
+  #readout .big small{font-size:15px;color:#758bb0;font-weight:300;letter-spacing:0}
+  #readout .yr{font-size:10.5px;letter-spacing:.36em;color:#7a8fb4;margin-top:9px;text-transform:uppercase;font-weight:500}
 
   /* ---- Controls / timeline ---- */
   #controls{position:absolute;left:0;right:0;bottom:0;height:106px;z-index:6;
@@ -131,12 +127,12 @@
     font-family:"Helvetica Neue",Arial,sans-serif;font-size:11.5px;color:#5f76a0;letter-spacing:.04em;
     pointer-events:none;transition:opacity .5s}
   /* ---- Author switcher ---- */
-  #switchBtn{margin-top:13px;pointer-events:auto;cursor:pointer;
-    font-family:"Helvetica Neue",Arial,sans-serif;font-size:11.5px;letter-spacing:.04em;color:#bcd2f2;
-    background:rgba(28,42,78,.55);border:1px solid rgba(120,160,230,.34);border-radius:24px;
-    padding:7px 14px;transition:.15s}
-  #switchBtn:hover{background:rgba(54,86,150,.75);border-color:rgba(150,190,255,.6);color:#fff;
-    box-shadow:0 0 16px rgba(70,140,255,.3)}
+  #switchBtn{margin-top:22px;pointer-events:auto;cursor:pointer;background:none;border:none;padding:0;
+    font-size:12px;letter-spacing:.05em;color:#8aa0c4;font-weight:500;
+    display:inline-flex;align-items:center;gap:7px;transition:color .18s}
+  #switchBtn::after{content:"\2192";font-size:13px;color:#6c83a8;transition:transform .2s,color .18s}
+  #switchBtn:hover{color:#eef4ff}
+  #switchBtn:hover::after{transform:translateX(3px);color:#9fb6d6}
   #switcher{position:fixed;inset:0;z-index:20;display:none;align-items:center;justify-content:center;
     background:rgba(4,7,16,.74);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
   #switcher.show{display:flex}
@@ -146,7 +142,7 @@
     box-shadow:0 24px 80px rgba(0,0,0,.7);font-family:"Helvetica Neue",Arial,sans-serif}
   .sw-close{position:absolute;right:16px;top:12px;font-size:22px;color:#7f96bb;cursor:pointer;line-height:1}
   .sw-close:hover{color:#fff}
-  .sw-h{font-family:"Iowan Old Style",Georgia,serif;font-size:23px;color:#f2f7ff;margin-bottom:4px}
+  .sw-h{font-family:inherit;font-weight:600;font-size:22px;color:#f2f7ff;margin-bottom:4px;letter-spacing:-.01em}
   .sw-sub{font-size:13px;color:#9db2d6;margin-bottom:16px;line-height:1.5}
   .sw-steps{margin:0 0 16px;padding-left:20px;color:#bcd0ee;font-size:13px;line-height:1.7}
   .sw-steps li{margin-bottom:3px}
@@ -183,8 +179,8 @@
     background:radial-gradient(circle at 50% 38%,#0b1430,#05070f 72%);padding:32px;text-align:center}
   .mm-box{max-width:440px}
   .mm-mark{font-size:34px;color:#6fd4ff;margin-bottom:18px;text-shadow:0 0 24px rgba(80,170,255,.6)}
-  #mobileMsg h2{font-family:"Iowan Old Style","Palatino Linotype",Georgia,serif;font-size:26px;
-    color:#f2f7ff;margin:0 0 16px;line-height:1.18;letter-spacing:.3px}
+  #mobileMsg h2{font-family:inherit;font-weight:300;font-size:27px;
+    color:#f2f7ff;margin:0 0 16px;line-height:1.2;letter-spacing:-.01em}
   #mobileMsg p{font-family:"Helvetica Neue",Arial,sans-serif;font-size:15px;line-height:1.55;color:#9db2d6;margin:0 0 10px}
   #mobileMsg .mm-sub{color:#6f86aa;font-size:13.5px}
   @media (max-width:760px), (pointer:coarse) and (max-height:480px){
@@ -196,16 +192,16 @@
 <body>
 <div id="stage">
   <canvas id="sky"></canvas>
+  <div id="topscrim"></div>
 
   <div id="title">
-    <div class="eyebrow">A Star Chart of Published Work</div>
-    <h1>The Constellation<br>of a Career</h1>
+    <div class="eyebrow">The Constellation of a Career</div>
     <div id="heroName">
       <span class="hn-layer hn-glow hn-name" aria-hidden="true">Joseph A. Cafazzo</span>
       <span class="hn-layer hn-main hn-name" id="authorName">Joseph A. Cafazzo</span>
     </div>
-    <div class="sub"><span id="pubcount">172</span> publications &nbsp;·&nbsp; <span id="yrange">1995 – 2026</span> &nbsp;·&nbsp; <span id="srclabel">charted from Google Scholar</span></div>
-    <button id="switchBtn" type="button">✦&nbsp; Chart another researcher</button>
+    <div class="sub"><span id="pubcount">172</span> publications &nbsp;·&nbsp; <span id="yrange">1995 – 2026</span> &nbsp;·&nbsp; <span id="srclabel">Google Scholar</span></div>
+    <button id="switchBtn" type="button">Chart another researcher</button>
   </div>
 
   <div id="legend">
@@ -215,7 +211,7 @@
   </div>
 
   <div id="readout">
-    <div class="big"><span id="cnt">0</span><small> / <span id="total">172</span> papers</small></div>
+    <div class="big"><span id="cnt">0</span><small> / <span id="total">172</span></small></div>
     <div class="yr" id="yrlab">1996</div>
   </div>
 
@@ -471,7 +467,7 @@ function applyData(papers, author, src){
   document.getElementById('pubcount').textContent=DATA.length;
   document.getElementById('total').textContent=DATA.length;
   document.getElementById('yrange').textContent=YEAR_MIN+' – '+(YEAR_MAX-1);
-  document.getElementById('srclabel').textContent=src||'charted from Google Scholar';
+  document.getElementById('srclabel').textContent=src||'Google Scholar';
   for(const k in bornAt) delete bornAt[k];
   activeTheme=null; pinned=null; hovered=null; if(typeof card!=='undefined') card.classList.remove('show');
   buildLegend();
@@ -808,7 +804,7 @@ scrub.addEventListener('input',()=>{
 window.addEventListener('resize',()=>{DPR=Math.min(window.devicePixelRatio||1,2);layout();});
 // boot the default (Cafazzo) through the same path as a pasted profile, so its categories are
 // mined from his own titles too — keeping the default and copy-paste flows perfectly consistent.
-applyData(DEFAULT_DATA.map(d=>({...d})), DEFAULT_AUTHOR, 'charted from Google Scholar');
+applyData(DEFAULT_DATA.map(d=>({...d})), DEFAULT_AUTHOR, 'Google Scholar');
 setPlayBtn();
 requestAnimationFrame(draw);
 
@@ -833,11 +829,11 @@ document.getElementById('swPasteBtn').onclick=()=>{
   const surname=inferSurname(rows);
   const author=guessAuthor(txt, surname);
   const papers=buildPapers(rows, surname);
-  if(applyData(papers, author, 'charted from Google Scholar')){ setStatus(''); closeSwitcher(); }
+  if(applyData(papers, author, 'Google Scholar')){ setStatus(''); closeSwitcher(); }
   else setStatus('Could not build a constellation from that text.','err');
 };
 document.getElementById('swReset').onclick=()=>{
-  applyData(DEFAULT_DATA.map(d=>({...d})), DEFAULT_AUTHOR, 'charted from Google Scholar');
+  applyData(DEFAULT_DATA.map(d=>({...d})), DEFAULT_AUTHOR, 'Google Scholar');
   document.getElementById('swPaste').value='';
   setStatus(''); closeSwitcher();
 };
