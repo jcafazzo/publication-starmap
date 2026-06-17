@@ -6,17 +6,9 @@ An interactive star map of the published research of **Joseph A. Cafazzo** — 1
 
 ## What it is
 
-Every publication is a star. The stars are grouped into seven research "constellations" and laid out along a 30-year timeline:
+Every publication is a star. The stars are grouped into research "constellations" and laid out along a 30-year timeline. The constellations are **not a fixed list** — they are mined from the researcher's own paper titles, so the categories always fit the particular breadth of that author's work. For Joseph Cafazzo they come out as Heart Failure, Diabetes, Children & Youth, Human Factors, Home Care, Chronic Disease, Cancer Survivorship and more; for a pain researcher they would surface Pain, Arthritis, and so on.
 
-- Human Factors & Safety
-- Heart Failure & Cardiac
-- Diabetes & Youth
-- Digital Health & Self-Management
-- Cancer & Oncology
-- Kidney & Dialysis
-- Methods & Other
-
-On load, a **career timelapse** sweeps left to right, igniting each paper in the year it was published while a counter ticks up to 172. The researcher's name is featured with a mouse-driven parallax effect.
+On load, a **career timelapse** sweeps left to right, igniting each paper in the year it was published while a counter ticks up to the total. The researcher's name is featured with a mouse-driven parallax effect.
 
 ## Visual encoding
 
@@ -35,7 +27,7 @@ On load, a **career timelapse** sweeps left to right, igniting each paper in the
 
 The page can build a constellation for **any** Google Scholar author, not just the default. Click **"✦ Chart another researcher"** under the title. The dataset is swapped in place — the timeline, lanes, legend counts, citation-scaled stars, and author rings all recompute for the new profile.
 
-Google Scholar has no public API and blocks automated loading (every CORS proxy is served a robot page), so the profile is **pasted in**: open the target Scholar profile, click *Show more* until all papers are loaded, select all, copy, and paste into the box. The page parses each entry's title, citation count, year, and authors; classifies it into one of the seven constellations by title; infers the researcher's name; and rings their first/senior-author work. A **"Reset to Cafazzo"** button restores the default.
+Google Scholar has no public API and blocks automated loading (every CORS proxy is served a robot page), so the profile is **pasted in**: open the target Scholar profile, click *Show more* until all papers are loaded, select all, copy, and paste into the box. The page parses each entry's title, citation count, year, and authors; **mines a fresh set of research constellations from that author's own titles** (a greedy keyword/phrase clustering that ignores generic method words, merges population synonyms like *children/adolescents/youth*, and drops terms so common they don't distinguish anything); infers the researcher's name; and rings their first/senior-author work. A **"Reset to Cafazzo"** button restores the default.
 
 ## Data
 
